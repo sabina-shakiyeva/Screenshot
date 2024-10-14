@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
+
 var port = 5000;
 var ipAddress = IPAddress.Parse("127.0.0.1");
 var ep = new IPEndPoint(ipAddress, port);
@@ -20,13 +21,13 @@ try
             Console.WriteLine($"{client.Client.RemoteEndPoint} connected");
             var stream = client.GetStream();
 
-          
+
             int count = 1;
             try
             {
                 while (true)
                 {
-                   
+
                     string screenshotPath = $@"C:\Users\shaki\source\repos\Server\Server\ScreenPhotos\screenshot_{count++}.png";
 
                     using (var fs = new FileStream(screenshotPath, FileMode.Create, FileAccess.Write))
@@ -37,17 +38,23 @@ try
                         {
                             fs.Write(buffer, 0, len);
 
-                           
+
                             if (len < buffer.Length)
                             {
                                 break;
                             }
+                          
+                        }
+                        if (len == 0)
+                        {
+                            Console.WriteLine("Client disconnected.");
+                            break;
                         }
                     }
 
                     Console.WriteLine($"Screenshot saved at {screenshotPath}");
+                   
 
-                    
                     if (!client.Connected)
                     {
                         break;

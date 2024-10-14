@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+
 var port = 5000;
 var ipAddress = IPAddress.Parse("127.0.0.1");
 var ep = new IPEndPoint(ipAddress, port);
@@ -19,17 +20,19 @@ try
 
         while (true)
         {
-            
+
             Console.Write("Taking screenshot. Write 'exit' to stop or press Enter to continue:");
 
             string input = Console.ReadLine();
             if (input == "exit")
             {
-               
+                networkStream.Close();  
+                client.Close(); 
+                break;
                 break;
             }
 
-            
+
             string path = "screenshot";
             using (Bitmap bitmap = new Bitmap(1920, 1080))
             {
@@ -38,7 +41,7 @@ try
                 bitmap.Save($"{path}.png", ImageFormat.Png);
             }
 
-           
+
             var screenshotPath = $"{path}.png";
             using (var readFs = new FileStream(screenshotPath, FileMode.Open, FileAccess.Read))
             {
@@ -52,11 +55,11 @@ try
 
             Console.WriteLine("Screenshot sent to server.");
 
-            
+
             Thread.Sleep(10000);
         }
 
-       
+
         networkStream.Close();
         client.Close();
         Console.WriteLine("Disconnected from server.");
